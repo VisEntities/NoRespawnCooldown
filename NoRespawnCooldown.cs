@@ -5,17 +5,17 @@
  */
 
 using HarmonyLib;
+using Oxide.Core.Plugins;
 
 namespace Oxide.Plugins
 {
-    [Info("No Respawn Cooldown", "VisEntities", "1.0.0")]
+    [Info("No Respawn Cooldown", "VisEntities", "1.0.1")]
     [Description("Lets players use the respawn command without any cooldown.")]
     public class NoRespawnCooldown : RustPlugin
     {
         #region Fields
 
         private static NoRespawnCooldown _plugin;
-        private Harmony _harmony;
 
         #endregion Fields
 
@@ -24,13 +24,10 @@ namespace Oxide.Plugins
         private void Init()
         {
             _plugin = this;
-            _harmony = new Harmony(Name + "PATCH");
-            _harmony.PatchAll();
         }
 
         private void Unload()
         {
-            _harmony.UnpatchAll(Name + "PATCH");
             _plugin = null;
         }
 
@@ -38,6 +35,7 @@ namespace Oxide.Plugins
 
         #region Harmony Patches
 
+        [AutoPatch]
         [HarmonyPatch(typeof(BasePlayer), "MarkRespawn")]
         public static class BasePlayer_MarkRespawn_Patch
         {
